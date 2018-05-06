@@ -60,7 +60,7 @@ MySQL> select * from post WHERE id >= ( select sql_no_cache id from post limit 8
 10 rows in set (0.02 sec)
 ```
 
-**改成子查询方案，效率耶不错**
+**改成子查询方案，效率也不错**
 
 分页的业务逻辑改进
 
