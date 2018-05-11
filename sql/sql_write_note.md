@@ -152,7 +152,7 @@
     ```
 31. 减少使用视图，避免复杂的语句。
 32. SQL语句中IN包含的值不超过500。
-33. UPDATE、DELETE语句不使用LIMIT。有主键id的表WHERE条件应结合主键。
+33. UPDATE、DELETE语句不使用LIMIT(binlog格式是statement或是mixed格式时，容易造成主从不一致,binlog_format=row时，请忽略)。有主键id的表WHERE条件应结合主键。
 34. 使用prepared statement，可以提供性能并且避免SQL注入。
 35. InnoDB表避免使用COUNT(*)操作，计数统计实时要求较强可以使用memcache或者redis，非实时统计可以使用单独统计表，定时更新。
 36. 禁止在Update语句，将“,”写成“and”，非常危险。
