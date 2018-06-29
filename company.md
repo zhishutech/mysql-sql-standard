@@ -3,7 +3,8 @@
 感谢以下企业的贡献：
 
 ![知数堂w300h200](/img/zhishutang-logo.png)   http://zhishutang.com
-<img src="/img/hujiang-logo.png" width = "300" height = "200" alt="沪江网" /> http://www.hujiang.com
+
+<img src="/img/hujiang-logo.png" width = "280" height = "100" alt="沪江网" />   http://www.hujiang.com
 
 
 ## 加入方法
