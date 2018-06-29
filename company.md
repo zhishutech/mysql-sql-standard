@@ -2,7 +2,8 @@
 
 感谢以下企业的贡献：
 
-![知数堂w300h200](/img/zhishutang-logo.png)   http://zhishutang.com
+![知数堂w300h200](/img/zhishutang-logo.png)     http://zhishutang.com
+
 
 <img src="/img/hujiang-logo.png" width = "280" height = "100" alt="沪江网" />   http://www.hujiang.com
 
