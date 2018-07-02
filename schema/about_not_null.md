@@ -20,4 +20,4 @@ c1 int(10) not null default ‘0’
 
 **  旧表新加字段，需要允许为NULL（避免全表数据更新 ，长期持锁导致阻塞）  **
 
-使用pt-osc ak或是 pt-ost操作。
+使用pt-osc类工具操作。
