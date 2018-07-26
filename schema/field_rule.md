@@ -23,6 +23,5 @@
 3. 自增长标识建议采用int或bigint数据类型，如果该表有大量的删除及再写入就使用bigint,反之int就够用。
 4. 时间类型建议采用为datetime/timestamp数据类型
 5. 禁止使用text、longtext等的数据类型
-6. 禁止使用varchar(max)
-7. 字段值如果为非负数，必须是 unsigned。
+6. 字段值如果为非负数，必须是 unsigned。
 
