@@ -102,7 +102,8 @@
 16. 注意表字段的类型，避免表字段的隐示转换
 
     ```
-    比如：列为int，如果where 列=’1’。  建议后面整数类型的值加上引号。
+    比如：列为varchar，如果where 列=1。  建议后面整数类型的值加上引号。
+    郑松华注解 ： 字符和数字比较的时候 ，字符会变成数字之后 再比较 如果这时候 字符类型有索引 就会发生隐士转换 导致用不了索引
     ```
 
 17. 考虑使用union all，少使用union，注意考虑去重
@@ -125,6 +126,7 @@
     union all
     Select * from opp WHERE cellPhone='13800138000';
     郑松华注解 ：Mysql5.6 和5.7当中对in 的处理机制有点不一样 注意把握
+    尤其是 不同的列的or 条件的时候 有可能一个索引满足不了 ，这时候 需要union all 分开来满足不同的索引 
     ```
 
 19. 用Where子句替换HAVING子句
@@ -145,7 +147,10 @@
 23. 使用INSERT ... ON DUPLICATE KEY update (INSERT IGNORE)来避免不必要的查询
 24. 考虑使用limit N，少用limit M,N，特别是大表，或M比较大的时候
 25. 减少或避免排序，如：group by语句中如果不需要排序，可以增加order by null
-26. 增删改语句中不使用不确定值函数和随机函数，如：RAND()和NOW()等。
+    ```
+    郑松华注解：8.0 之前有group by 是有排序的 但是8.0开始 group by 没有排序
+    ```
+26. 增删改语句中不使用不确定值函数和随机函数，如：RAND()和SYSDATE()等。
 27. INSERT语句使用batch提交（INSERT INTO table VALUES(),(),()„„），values的个数不超过500。
 28. 避免使用存储过程、触发器、函数、UDF、events等，容易将业务逻辑和DB耦合在一起，并且MySQL的存储过程、触发器、函数、UDF、events中存在一定的bug。
 29. 避免使用JOIN。
@@ -157,6 +162,9 @@
     UPDATE … WHERE ID IN(10,20,50,…)
     ```
 31. 减少使用视图，避免复杂的语句。
+    ```
+    郑松华注解：视图有可能导致 外部参数进不去的情况 这样会导致sql 运行缓慢
+    ```
 32. SQL语句中IN包含的值不超过500。
 33. UPDATE、DELETE语句不使用LIMIT(binlog格式是statement或是mixed格式时，容易造成主从不一致,binlog_format=row时，请忽略)。有主键id的表WHERE条件应结合主键。
 34. 使用prepared statement，可以提供性能并且避免SQL注入。
@@ -168,4 +176,4 @@
     错误示例：update Table set uid=uid+1000 and gid=gid+1000 where id <=2 ;
     此时“uid=uid+1000 and gid=gid+1000”将作为值赋给uid，并且无Warning！！！
     ```
-
+37 update 语句禁止使用 in ,exists等 尽量使用 join 
