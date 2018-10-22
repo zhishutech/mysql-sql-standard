@@ -87,6 +87,7 @@
     ```
     比如：id，date字段放在前面，而status这样的字段放在后面，具体的可以通过执行计划来把握。
     郑松华注解 ：不知道作者想表达意思 ？ 如果是SQL中的select 列中的话 上面的没有关系 因为只跟是否回表有关系
+    @松华，主要是想表达，把过滤性好的条件放在联合索引的前面，这样过滤效果会更好些。
     ```
 14. 表字段组合中出现比较多的表字段放在前面
 
@@ -102,15 +103,14 @@
 16. 注意表字段的类型，避免表字段的隐示转换
 
     ```
-    比如：列为varchar，如果where 列=1。  建议后面整数类型的值加上引号。
-    郑松华注解 ： 字符和数字比较的时候 ，字符会变成数字之后 再比较 如果这时候 字符类型有索引 就会发生隐士转换 导致用不了索引
+    比如：c1列为varchar，如果where c1=1，建议后面整数类型的值加上引号，例如：where c1='1'。
     ```
 
 17. 考虑使用union all，少使用union，注意考虑去重
 
     ```
     union all不去重，而少了排序操作，速度相对比union要快，如果没有去重的需求，优先使用union all。
-    郑松华注解 ：Mysql5.6和5.7对union all 的执行计划是不一样的注意把握
+    郑松华注解 ：MySQL 5.6和5.7对union all 的执行计划是不一样的注意把握
     ```
     
 18. 不同字段的值or或in大于等于3次，考虑用union all替换；同一字段的值or用in替换
@@ -125,7 +125,7 @@
     Select * from opp WHERE phone='010-88886666' 
     union all
     Select * from opp WHERE cellPhone='13800138000';
-    郑松华注解 ：Mysql5.6 和5.7当中对in 的处理机制有点不一样 注意把握
+    郑松华注解 ：MySQL 5.6 和5.7当中对in 的处理机制有点不一样 注意把握
     尤其是 不同的列的or 条件的时候 有可能一个索引满足不了 ，这时候 需要union all 分开来满足不同的索引 
     ```
 
@@ -139,13 +139,19 @@
     ```
 20. 对同一表的order by和group by操作分别小于3组，否则考虑业务逻辑或分表
 21. 尽量使用主键进行update和delete
-22. 小心text/blobs等大字段，如果确实不需要这样的大字段，则不用放入sql语句中
+22. 小心text/blobs等大字段，如果确实不需要这样的大字段，则不用放入sql语句中，避免产生过多额外I/O读。
     
     ```
     郑松华注解：有可能产生行链接问题，还有排序的时候产生大量消耗
     ```
 23. 使用INSERT ... ON DUPLICATE KEY update (INSERT IGNORE)来避免不必要的查询
-24. 考虑使用limit N，少用limit M,N，特别是大表，或M比较大的时候
+24. limit N以及limit M,N场景中，不管是M还是N的值都不宜过大（一般不超过一万）。当M（起始值）较大时，建议用延迟关联的方式优化，例如：
+```
+SELECT * FROM (SELECT * FROM `t1` WHERE id > ( SELECT id FROM `t1` ORDER BY id DESC LIMIT 935510, 1) LIMIT 10) t ORDER BY id DESC;
+
+或
+SELECT * FROM `t1` INNER JOIN ( SELECT id FROM `t1`ORDER BY id DESC LIMIT 935500,10) t2 USING (id);
+```
 25. 减少或避免排序，如：group by语句中如果不需要排序，可以增加order by null
     ```
     郑松华注解：8.0 之前有group by 是有排序的 但是8.0开始 group by 没有排序
@@ -153,7 +159,7 @@
 26. 增删改语句中不使用不确定值函数和随机函数，如：RAND()和SYSDATE()等。
 27. INSERT语句使用batch提交（INSERT INTO table VALUES(),(),()„„），values的个数不超过500。
 28. 避免使用存储过程、触发器、函数、UDF、events等，容易将业务逻辑和DB耦合在一起，并且MySQL的存储过程、触发器、函数、UDF、events中存在一定的bug。
-29. 避免使用JOIN。
+29. 避免使用超过3次的JOIN查询。
 30. 使用合理的SQL语句减少与数据库的交互次数。
 
     ```
@@ -165,7 +171,7 @@
     ```
     郑松华注解：视图有可能导致 外部参数进不去的情况 这样会导致sql 运行缓慢
     ```
-32. SQL语句中IN包含的值不超过500。
+32. SQL语句中IN包含的值尽量不超过200个。
 33. UPDATE、DELETE语句不使用LIMIT(binlog格式是statement或是mixed格式时，容易造成主从不一致,binlog_format=row时，请忽略)。有主键id的表WHERE条件应结合主键。
 34. 使用prepared statement，可以提供性能并且避免SQL注入。
 35. InnoDB表避免使用COUNT(*)操作，计数统计实时要求较强可以使用memcache或者redis，非实时统计可以使用单独统计表，定时更新。
