@@ -1,19 +1,19 @@
 # MySQL安装规范
 该文档解释归：知数堂 http://zhishutang.com
 
-##系统安装规范
+## 系统安装规范
 
-###bois中
+### bois中
 1. 禁用系统的numa
 2. 关闭节能模式& 关闭NUMA、C-states、C1E
 3. CPU，内存处在高性能模式
 
-###Raid控制器
+### Raid控制器
 1. 使用WB模式，可能选择force wb
 2. 优先选择Raid10，次优先选择Raid5 
 3. 关闭Raid卡预读机制
 
-##系统优化
+## 系统优化
 1. 更改文件句柄和进程数
 2. 内核优化 /etc/sysctl.conf  
 
@@ -31,7 +31,7 @@
 3. 禁用selinux ： /etc/sysconfig/selinux  更改SELINUX=disabled.
 4. iptables如果不使用可以关闭。可是需要打开MySQL需要的端口号
 
-##文件系统优化
+## 文件系统优化
 1. 推荐使用XFS文件系统
 2. MySQL数据分区独立 ，例如挂载点为: /data
 3. mount参数 defaults, noatime, nodiratime, nobarrier 如/etc/fstab：
@@ -46,12 +46,12 @@
    SSD&PCI-E： noop
 
 
-##MySQL版本选择
+## MySQL版本选择
 特别注意，不要使用yum，apt-get直接安装。 建议从官方下载指定的二进制版本安装。 
 对于安装版本犹豫不决的，推荐加入QQ群：581702903 咨询。
 现在推荐： MySQL-5.7.22 （2018.4月）
 
-##MySQL安装路径
+## MySQL安装路径
 1.  基本准备 
 
     * 下载mysql
@@ -130,7 +130,7 @@
   
   *恭喜到此MySQL安装毕*
 
-##MySQL启动及关闭
+## MySQL启动及关闭
 1. 启动mysql
    
     ```
