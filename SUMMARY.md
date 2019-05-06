@@ -18,7 +18,7 @@
     * [sql其它优化](sql/other.md)
 * [开发技巧](devtips/README.md)
     * [类型转换](devtips/type_change.md)
-    * [类型溢出](devtips/typd_overflow.md)
+    * [类型溢出](devtips/type_overflow.md)
     * [分页技巧](devtips/page.md)
 * [读写分离](arch/master_slave.md)
 * [高可用架构](arch/README.md)
